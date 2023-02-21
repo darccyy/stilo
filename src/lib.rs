@@ -126,9 +126,41 @@ pub fn stylize(text: &str, style: &Style) -> String {
     style.format(text)
 }
 
+
+/// Create a new `Style` struct (without formatting text)
+///
+/// Similar to the `stylize` function and `stylize!` macro
+#[macro_export]
+macro_rules! style {
+    // Only color
+    ( $color: ident ) => {{
+        $crate::Style::new()
+            .color($crate::Color::$color)
+    }};
+
+
+    // Only styles
+    ( - $( $style: ident )+ ) => {{
+        $crate::Style::new()
+            $(
+                .$style()
+            )*
+    }};
+
+    // Style and color
+    ( $color: ident $( $style: ident )* ) => {{
+        $crate::Style::new()
+            .color($crate::Color::$color)
+            $(
+                .$style()
+            )*
+    }};
+}
+
+
 /// Apply any color and style to text
 ///
-/// Similar to the `stylize` function
+/// Similar to the `stylize` function and `style!` macro
 #[macro_export]
 macro_rules! stylize {
     // No style
