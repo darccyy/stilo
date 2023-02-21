@@ -4,6 +4,8 @@ A small library for stylizing terminal text with ANSI color codes.
 
 # Usage
 
+Add `stilo = "0.1.0"` to your `Cargo.toml` dependencies
+
 ```rs
 use stilo::stylize;
 
