@@ -1,0 +1,13 @@
+[package]
+name = "stilo"
+version = "0.1.0"
+edition = "2021"
+description = "A small library for stylizing terminal text with ANSI color codes"
+license = "MIT"
+documentation = "https://docs.rs/stilo/latest/stilo"
+repository = "https://github.com/darccyy/stilo"
+authors = ["darcy"]
+keywords = ["color", "ansi", "style", "macro", "terminal"]
+exclude = ["target"]
+
+[dependencies]
