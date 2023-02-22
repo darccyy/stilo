@@ -24,12 +24,12 @@ fn builder_works() {
 
 #[test]
 fn style_macro_works() {
-    assert_eq!(style!(Red), Style::new().color(Red));
-    assert_eq!(style!(Blue),  Style::new().color(Blue));
-    assert_eq!(style!(Red bold), Style::new().color(Red).bold());
-    assert_eq!(style!(Red bold italic),Style::new().color(Red).b().i());
-    assert_eq!(style!(-bold), Style::new().b());
-    assert_eq!(style!(- bold italic), Style::new().bold().italic());
+    assert_eq!(style!(Red), *Style::new().color(Red));
+    assert_eq!(style!(Blue), *Style::new().color(Blue));
+    assert_eq!(style!(Red bold), *Style::new().color(Red).bold());
+    assert_eq!(style!(Red bold italic), *Style::new().color(Red).b().i());
+    assert_eq!(style!(-bold), *Style::new().b());
+    assert_eq!(style!(- bold italic), *Style::new().bold().italic());
 }
 
 #[test]
