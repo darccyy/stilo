@@ -2,6 +2,9 @@ use super::*;
 
 #[test]
 fn builder_works() {
+    assert!(matches!(Style::new(), Style { .. }));
+    assert!(matches!(&Style::new().color(Red), &Style { .. }));
+
     assert_eq!(Style::new().format("hello"), "hello");
     assert_eq!(
         Style::new().color(Red).format("hello"),
@@ -24,6 +27,9 @@ fn builder_works() {
 
 #[test]
 fn style_macro_works() {
+    assert!(matches!(style!(Red), Style { .. }));
+    assert!(matches!(&style!(Red), &Style { .. }));
+
     assert_eq!(style!(Red), *Style::new().color(Red));
     assert_eq!(style!(Blue), *Style::new().color(Blue));
     assert_eq!(style!(Red bold), *Style::new().color(Red).bold());
