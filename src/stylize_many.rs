@@ -20,41 +20,76 @@
 ///     // Red
 ///     "Hello\n": Red;
 ///     // Red, italic, and bold
-///     "Hello\n": Red italic bold;
+///     "Hello\n": Red + italic + bold;
 ///     // Default color, italic and bold
-///     "Hello\n": - i b;
+///     "Hello\n": +i+b;
 ///     // Format string
-///     "Hello {}": Green i b, world;
+///     "Hello {}": Green + i+b, world;
 /// ));
 /// ```
 #[macro_export]
 macro_rules! stylize_many {
+    // Creating styles
     (
         $(
             $text: literal
             $(
-                : $color: tt
-                $( $decor: ident )*
+                :
+                $( $color: ident )?
+                $( + $decor: ident )*
+                $( if $condition: expr )?
             )?
             $(, $arg: expr )* $(,)?
         );* $(;)?
-    ) => {
-        // ? Could this string concatenation be optimized ?
-        String::new() + $(
-            &$crate::stylize!(
+    ) => {{
+        let mut text = String::new();
+        $(
+            text += &$crate::stylize!(
                 $text
                 $(
-                    : $color
-                    $( $decor )*
+                    :
+                    $( $color )?
+                    $( + $decor )*
+                    $( if $condition )?
                 )?
                 $(, $arg )*
-            ) +
-        )* ""
-    };
+            );
+        )*
+        text
+    }};
+
+    // Using existing styles
+    (
+        $(
+            $text: literal
+            $(
+                :
+                $( $style: block )?
+                $( if $condition: expr )?
+            )?
+            $(, $arg: expr )* $(,)?
+        );* $(;)?
+    ) => {{
+        let mut text = String::new();
+        $(
+            text += &$crate::stylize!(
+                $text
+                $(
+                    :
+                    $( $style )?
+                    $( if $condition )?
+                )?
+                $(, $arg )*
+            );
+        )*
+        text
+    }};
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::style;
+
     #[test]
     fn stylize_many_works() {
         let world = "World!";
@@ -62,18 +97,20 @@ mod tests {
         let actual = stylize_many!(
             "Hello";
             "\nHello": Red;
-            "\nHello": Blue italic;
-            "\nHello": - i b;
+            "\nHello": Blue+italic;
+            "\nHello": +i+b;
             "\n";
             "\nHello {}": Red, world;
-            "\nHello {}": Blue italic, world;
-            "\nHello {}": - italic, world;
-            "\nHello {} {}": - underline dim, world, 123;
+            "\nHello {}": Blue+italic, world;
+            "\nHello {}": + italic, world;
+            "\nHello {} {}": + underline+dim, world, 123;
             "\nHello {world}": Green;
-            "\nHello {world:?}": Green b;
+            "\nHello {world:?}": Green+b;
             "\nHello {} {}": Red, world, 123;
-            "\nHello {} {}": Red d, world, 123;
+            "\nHello {} {}": Red+d, world, 123;
             "\nHello {world} {}", 123;
+            "\nHello": Red if true;
+            "\nHello": Red if false;
         );
 
         let expected = concat!(
@@ -91,6 +128,8 @@ mod tests {
             "\x1b[31m\nHello World! 123\x1b[0m",
             "\x1b[31;2m\nHello World! 123\x1b[0m",
             "\nHello World! 123",
+            "\x1b[31m\nHello\x1b[0m",
+            "\nHello",
         );
 
         // Check each line
@@ -98,7 +137,42 @@ mod tests {
         for actual_line in actual.split("\n") {
             let expected_line = expected_lines.next().unwrap();
 
-            println!("{:?}\n{:?}", actual_line, expected_line);
+            println!("{:?}\n{:?}\n", actual_line, expected_line);
+            assert_eq!(actual_line, expected_line);
+        }
+
+        // Check all
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn stylize_many_works_w_existing_styles() {
+        let world = "World!";
+
+        let style = style!(Yellow + italic);
+
+        let actual = stylize_many!(
+            "Hello";
+            "\nHello": {style};
+            "\nHello {}": {style}, world;
+            "\nHello": {style} if true;
+            "\nHello": {style} if false;
+        );
+
+        let expected = concat!(
+            "Hello",
+            "\x1b[33;3m\nHello\x1b[0m",
+            "\x1b[33;3m\nHello World!\x1b[0m",
+            "\x1b[33;3m\nHello\x1b[0m",
+            "\nHello",
+        );
+
+        // Check each line
+        let mut expected_lines = expected.split("\n");
+        for actual_line in actual.split("\n") {
+            let expected_line = expected_lines.next().unwrap();
+
+            println!("{:?}\n{:?}\n", actual_line, expected_line);
             assert_eq!(actual_line, expected_line);
         }
 

@@ -20,11 +20,11 @@
 ///     // Red
 ///     "Hello\n": Red;
 ///     // Red, italic, and bold
-///     "Hello\n": Red italic bold;
+///     "Hello\n": Red + italic+bold;
 ///     // Default color, italic and bold
-///     "Hello\n": - i b;
+///     "Hello\n": +i+b;
 ///     // Format string
-///     "Hello {}": Green i b, world;
+///     "Hello {}": Green + i+b, world;
 /// );
 /// ```
 #[macro_export]
@@ -43,17 +43,17 @@ mod tests {
         println_styles!(
             "Hello";
             "\nHello": Red;
-            "\nHello": Blue italic;
-            "\nHello": - i b;
+            "\nHello": Blue+italic;
+            "\nHello": + i+b;
             "\n";
             "\nHello {}": Red, world;
-            "\nHello {}": Blue italic, world;
-            "\nHello {}": - italic, world;
-            "\nHello {} {}": - underline dim, world, 123;
+            "\nHello {}": Blue+italic, world;
+            "\nHello {}": +italic, world;
+            "\nHello {} {}": +underline+dim, world, 123;
             "\nHello {world}": Green;
-            "\nHello {world:?}": Green b;
+            "\nHello {world:?}": Green+b;
             "\nHello {} {}": Red, world, 123;
-            "\nHello {} {}": Red d, world, 123;
+            "\nHello {} {}": Red+d, world, 123;
             "\nHello {world} {}", 123;
         );
     }

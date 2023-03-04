@@ -19,14 +19,14 @@ use stilo::stylize;
 println!("{}", stylize!("Hello": Red));
 
 // Red, italic, and bold
-println!("{}", stylize!("Hello": Red italic bold));
+println!("{}", stylize!("Hello": Red + italic+bold));
 
 // Default color, italic and bold
-println!("{}", stylize!("Hello": - i b));
+println!("{}", stylize!("Hello": +i+b));
 
 // Format string
 let world = "World!";
-println!("{}", stylize!("Hello {}": Green i b, world));
+println!("{}", stylize!("Hello {}": Green + i+b, world));
 ```
 
 ## `stylize_many!` and `println!_styles!`
@@ -48,11 +48,11 @@ println_styles!(
     // Red
     "Hello\n": Red;
     // Red, italic, and bold
-    "Hello\n": Red italic bold;
+    "Hello\n": Red + italic+bold;
     // Default color, italic and bold
-    "Hello\n": - i b;
+    "Hello\n": +i+b;
     // Format string
-    "Hello {}": Green i b, world;
+    "Hello {}": Green + i+b, world;
 );
 ```
 
@@ -68,11 +68,11 @@ let style = style!(Red);
 println!("{}", style.format("Hello"));
 
 // Red, italic, and bold
-let style = style!(Red italic bold);
+let style = style!(Red + italic + bold);
 println!("{}", style.format("Hello"));
 
 // Default color, italic and bold
-let style = style!(- i b);
+let style = style!(+i+b);
 println!("{}", style.format("Hello"));
 ```
 
