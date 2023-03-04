@@ -1,6 +1,6 @@
 [package]
 name = "stilo"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "A small library for stylizing terminal text with ANSI color codes"
 license = "MIT"

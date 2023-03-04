@@ -1,22 +1,72 @@
 # Stilo
 
-A small library for stylizing terminal text with ANSI color codes.
+A small library for stylizing terminal text with ANSI color codes, with ergonomic macros.
 
 # Usage
 
-Add `stilo = "0.1.0"` to your `Cargo.toml` dependencies
+Add `stilo = "0.2.0"` to your `Cargo.toml` dependencies
 
-```rs
+## stylize!
+
+Creates a `Style` struct and formats text.
+
+[Docs](https://docs.rs/stilo/latest/stilo/macro.stylize.html)
+
+```rust
 use stilo::stylize;
 
-fn main() {
+// Red
+println!("{}", stylize!("Hello": Red));
+
+// Red, italic, and bold
+println!("{}", stylize!("Hello": Red italic bold));
+
+// Default color, italic and bold
+println!("{}", stylize!("Hello": - i b));
+
+// Format string
+let world = "World!";
+println!("{}", stylize!("Hello {}": Green i b, world));
+```
+
+## stylize_many!
+
+Stylize many strings individually, and concatenate.
+
+[Docs](https://docs.rs/stilo/latest/stilo/macro.stylize_many.html)
+
+```rust
+use stilo::stylize_many;
+let world = "World!";
+
+println!("{}", stylize_many!(
     // Red
-    println!("{}", stylize!("Hello", Red));
-    
+    "Hello\n": Red;
     // Red, italic, and bold
-    println!("{}", stylize!("Hello", Red italic bold));
-    
+    "Hello\n": Red italic bold;
     // Default color, italic and bold
-    println!("{}", stylize!("Hello", - i b));
-}
+    "Hello\n": - i b;
+    // Format string
+    "Hello {}": Green i b, world;
+));
+```
+
+## style!
+
+Creates a `Style` struct, without formatting text.
+
+[Docs](https://docs.rs/stilo/latest/stilo/macro.style.html)
+
+```rust
+// Red
+let style = style!(Red);
+println!("{}", style.format("Hello"));
+
+// Red, italic, and bold
+let style = style!(Red italic bold);
+println!("{}", style.format("Hello"));
+
+// Default color, italic and bold
+let style = style!(- i b);
+println!("{}", style.format("Hello"));
 ```

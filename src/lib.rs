@@ -1,8 +1,13 @@
+mod style;
+mod stylize;
+mod stylize_many;
+
 #[cfg(test)]
 mod tests;
 
 use Color::*;
 
+/// Private macro for creating `Color` enum, and adding code parameters
 macro_rules! color_enum {
     ( $( $number: literal $kind: ident ),* $(,)? ) => {
         /// Color for `Style`
@@ -13,7 +18,7 @@ macro_rules! color_enum {
 
         impl Color {
             /// Get the ANSI parameter for the `Color`
-            fn param(&self) -> usize {
+            fn param(self) -> usize {
                 match self {
                     $( $kind => $number , )*
                 }
@@ -35,6 +40,10 @@ color_enum!(
 
 /// Stylize text with ANSI codes
 ///
+/// Color uses `Color` enum
+///
+/// Decorations include `bold`, `dim`, `italic`, and `underline`
+///
 /// Create with `Style::new()`
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Style {
@@ -45,15 +54,16 @@ pub struct Style {
     color: Option<Color>,
 }
 
-macro_rules! style_method {
+/// Private macro for implementing decoration methods to `Style` struct
+macro_rules! decor_method {
     ( $short: ident $long: ident ) => {
-        /// Add a style
-        pub fn $long(&mut self) -> &mut Self {
+        /// Add a decoration
+        pub fn $long(mut self) -> Self {
             self.$long = true;
             self
         }
-        /// Add a style
-        pub fn $short(&mut self) -> &mut Self {
+        /// Add a decoration
+        pub fn $short(mut self) -> Self {
             self.$long = true;
             self
         }
@@ -69,37 +79,38 @@ impl Style {
     /// Add a color
     ///
     /// Overrides any previous color
-    pub fn color(&mut self, color: Color) -> &mut Self {
+    pub fn color(mut self, color: Color) -> Self {
         self.color = Some(color);
         self
     }
 
-    style_method!(b bold);
-    style_method!(d dim);
-    style_method!(i italic);
-    style_method!(u underline);
+    decor_method!(b bold);
+    decor_method!(d dim);
+    decor_method!(i italic);
+    decor_method!(u underline);
 
     /// Format text with `Style`
     ///
-    /// Returns text as `String` if no styles or color is given
-    pub fn format(&self, text: &str) -> String {
+    /// Returns text as `String` if no color or decorations are given
+    pub fn format(self, text: &str) -> String {
         let mut params = Vec::new();
 
         if let Some(color) = self.color {
             params.push(color.param());
         }
 
-        macro_rules! style_param {
-            ( $( $number: literal $name: ident ),* $(,)? ) => {
+        /// Private macro for adding decoration codes to params
+        macro_rules! decor_param {
+            ( $( $code: literal $name: ident ),* $(,)? ) => {
                 $(
                     if self.$name {
-                        params.push($number);
+                        params.push($code);
                     }
                 )*
             };
         }
 
-        style_param!(
+        decor_param!(
             1 bold,
             2 dim,
             3 italic,
@@ -122,74 +133,6 @@ impl Style {
 }
 
 /// Apply a `Style` to text
-pub fn stylize(text: &str, style: &Style) -> String {
+pub fn stylize(text: &str, style: Style) -> String {
     style.format(text)
-}
-
-/// Create a new `Style` struct (without formatting text)
-///
-/// Similar to the `stylize` function and `stylize!` macro
-#[macro_export]
-macro_rules! style {
-    // Only color
-    ( $color: ident ) => {{
-        *$crate::Style::new()
-            .color($crate::Color::$color)
-    }};
-
-
-    // Only styles
-    ( - $( $style: ident )+ ) => {{
-        *$crate::Style::new()
-            $(
-                .$style()
-            )*
-    }};
-
-    // Style and color
-    ( $color: ident $( $style: ident )* ) => {{
-        *$crate::Style::new()
-            .color($crate::Color::$color)
-            $(
-                .$style()
-            )*
-    }};
-}
-
-/// Apply any color and style to text
-///
-/// Similar to the `stylize` function and `style!` macro
-#[macro_export]
-macro_rules! stylize {
-    // No style
-    ( $text: expr $(,)? ) => {{
-        $text
-    }};
-
-    // Only color
-    ( $text: expr, $color: ident ) => {{
-        $crate::Style::new()
-            .color($crate::Color::$color)
-            .format($text)
-    }};
-
-
-    // Only styles
-    ( $text: expr, - $( $style: ident )+ ) => {{
-        $crate::Style::new()
-            $(
-                .$style()
-            )*
-            .format($text)
-    }};
-
-    // Style and color
-    ( $text: expr, $color: ident $( $style: ident )* ) => {{
-        $crate::Style::new()
-            .color($crate::Color::$color)
-            $(
-                .$style()
-            )*
-            .format($text)
-    }};
 }
