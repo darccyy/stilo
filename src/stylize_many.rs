@@ -157,6 +157,7 @@ mod tests {
             "\nHello {}": {style}, world;
             "\nHello": {style} if true;
             "\nHello": {style} if false;
+            "\nHello": {style!(Red)};
         );
 
         let expected = concat!(
@@ -165,6 +166,7 @@ mod tests {
             "\x1b[33;3m\nHello World!\x1b[0m",
             "\x1b[33;3m\nHello\x1b[0m",
             "\nHello",
+            "\x1b[31m\nHello\x1b[0m",
         );
 
         // Check each line

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-mod print_style;
+mod wrappers;
 mod style;
 mod stylize;
 mod stylize_many;
