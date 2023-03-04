@@ -24,21 +24,21 @@ macro_rules! stylize {
     // No style, just text
     (
         $text: literal
-        $(, $( $arg: tt ),* $(,)? )?
+        $(, $arg: expr )* $(,)?
     ) => {
-        format!($text, $( $( $arg, )* )?)
+        format!($text, $( $arg, )*)
     };
 
     // Only color, no decoration
     (
         $text: literal
         : $color: ident
-        $(, $( $arg: tt ),* $(,)? )?
+        $(, $arg: expr )* $(,)?
     ) => {
         $crate::Style::new()
             .color($crate::Color::$color)
             .format(
-                &format!($text, $( $( $arg, )* )?)
+                &format!($text, $( $arg, )*)
             )
     };
 
@@ -47,7 +47,7 @@ macro_rules! stylize {
         $text: literal
         : $color: ident
         $( $decor: ident )*
-        $(, $( $arg: tt ),* $(,)? )?
+        $(, $arg: expr )* $(,)?
     ) => {
         $crate::Style::new()
             .color($crate::Color::$color)
@@ -55,7 +55,7 @@ macro_rules! stylize {
                 .$decor()
             )*
             .format(
-                &format!($text, $( $( $arg, )* )?)
+                &format!($text, $( $arg, )*)
             )
     };
 
@@ -64,14 +64,14 @@ macro_rules! stylize {
         $text: literal
         : -
         $( $decor: ident )*
-        $(, $( $arg: tt ),* $(,)? )?
+        $(, $arg: expr )* $(,)?
     ) => {
         $crate::Style::new()
             $(
                 .$decor()
             )*
             .format(
-                &format!($text, $( $( $arg, )* )?)
+                &format!($text, $( $arg, )*)
             )
     };
 }
@@ -86,7 +86,7 @@ mod tests {
 
         assert_eq!(stylize!("Hello {}", world), "Hello World!");
         assert_eq!(stylize!("Hello {world}"), "Hello World!");
-        assert_eq!(stylize!("Hello {0}", world,), "Hello World!");
+        assert_eq!(stylize!("Hello {0} {1}", world, 123,), "Hello World! 123");
 
         assert_eq!(stylize!("Hello": Red), "\x1b[31mHello\x1b[0m");
         assert_eq!(stylize!("Hello": Red,), "\x1b[31mHello\x1b[0m");

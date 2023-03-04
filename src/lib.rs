@@ -1,9 +1,10 @@
+#[cfg(test)]
+mod tests;
+
+mod print_style;
 mod style;
 mod stylize;
 mod stylize_many;
-
-#[cfg(test)]
-mod tests;
 
 use Color::*;
 

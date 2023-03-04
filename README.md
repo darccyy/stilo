@@ -29,9 +29,13 @@ let world = "World!";
 println!("{}", stylize!("Hello {}": Green i b, world));
 ```
 
-## stylize_many!
+## stylize_many! and println!\_styles!
 
 Stylize many strings individually, and concatenate.
+
+- `stylize_many!`: Returns a `String` of formatted text
+- `println_styles!`: Prints a `String` of formatted text to stdout, with newline.
+- - Same as `println!("{}", stylize_many!( ... ))`
 
 [Docs](https://docs.rs/stilo/latest/stilo/macro.stylize_many.html)
 
@@ -39,7 +43,8 @@ Stylize many strings individually, and concatenate.
 use stilo::stylize_many;
 let world = "World!";
 
-println!("{}", stylize_many!(
+// `println!("{}", stylize_many!` would also work in this example
+println_styles!(
     // Red
     "Hello\n": Red;
     // Red, italic, and bold
@@ -48,7 +53,7 @@ println!("{}", stylize_many!(
     "Hello\n": - i b;
     // Format string
     "Hello {}": Green i b, world;
-));
+);
 ```
 
 ## style!

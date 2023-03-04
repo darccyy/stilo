@@ -1,5 +1,7 @@
 /// Stylize many strings individually, and concatenate.
 ///
+/// Similar: `println_styles!`
+///
 /// For each argument, creates a `Style` struct and format text.
 ///
 /// Separate arguments with a semicolon.
@@ -13,6 +15,7 @@
 /// # use stilo::stylize_many;
 /// let world = "World!";
 ///
+/// // `println_styles!` would also work in this example
 /// println!("{}", stylize_many!(
 ///     // Red
 ///     "Hello\n": Red;
@@ -33,7 +36,7 @@ macro_rules! stylize_many {
                 : $color: tt
                 $( $decor: ident )*
             )?
-            $(, $( $arg: tt ),* $(,)? )?
+            $(, $arg: expr )* $(,)?
         );* $(;)?
     ) => {
         // ? Could this string concatenation be optimized ?
@@ -44,7 +47,7 @@ macro_rules! stylize_many {
                     : $color
                     $( $decor )*
                 )?
-                $(, $( $arg ),* )?
+                $(, $arg )*
             ) +
         )* ""
     };
