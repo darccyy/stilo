@@ -29,7 +29,7 @@ let world = "World!";
 println!("{}", stylize!("Hello {}": Green i b, world));
 ```
 
-## `stylize_many!` and `println!\_styles!`
+## `stylize_many!` and `println!_styles!`
 
 Stylize many strings individually, and concatenate.
 
