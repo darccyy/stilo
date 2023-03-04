@@ -79,7 +79,7 @@ println!("{}", style.format("Hello"));
 ## No macros
 
 ```rust
-use stilo::{Style, Color::*, stylize};
+use stilo::{Style, Color::*, style_format};
 
 // Create a new style with the builder pattern
 // `Style` implements `Copy`
@@ -88,5 +88,5 @@ let style = Style::new().color(Red).italic();
 // OOP Syntax
 println!("{}", style.format("Hello!"));
 // Functional syntax
-println!("{}", stylize("Hello!", style));
+println!("{}", style_format("Hello!", style));
 ```

@@ -147,6 +147,6 @@ impl Style {
 /// Apply a `Style` to text
 /// 
 /// Alternate syntax for `style.format(...)`
-pub fn stylize(text: &str, style: Style) -> String {
+pub fn style_format(text: &str, style: Style) -> String {
     style.format(text)
 }
