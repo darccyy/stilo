@@ -12,6 +12,8 @@ use Color::*;
 macro_rules! color_enum {
     ( $( $number: literal $kind: ident ),* $(,)? ) => {
         /// Color for `Style`
+        /// 
+        /// Import all colors with `use Color::*`
         #[derive(Debug, Clone, Copy, PartialEq)]
         pub enum Color {
             $( $kind, )*
@@ -46,6 +48,15 @@ color_enum!(
 /// Decorations include `bold`, `dim`, `italic`, and `underline`
 ///
 /// Create with `Style::new()`
+/// 
+/// # Examples
+/// 
+/// ```
+/// # use stilo::{Style, Color::*};
+/// let style = Style::new().color(Red).italic();
+/// 
+/// println!("{}", style.format("Hello!"));
+/// ```
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub struct Style {
     bold: bool,
@@ -134,6 +145,8 @@ impl Style {
 }
 
 /// Apply a `Style` to text
+/// 
+/// Alternate syntax for `style.format(...)`
 pub fn stylize(text: &str, style: Style) -> String {
     style.format(text)
 }

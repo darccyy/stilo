@@ -4,9 +4,9 @@ A small library for stylizing terminal text with ANSI color codes, with ergonomi
 
 # Usage
 
-Add `stilo = "0.2.0"` to your `Cargo.toml` dependencies
+Add `stilo = "0.2.2"` to your `Cargo.toml` dependencies
 
-## stylize!
+## `stylize!`
 
 Creates a `Style` struct and formats text.
 
@@ -29,7 +29,7 @@ let world = "World!";
 println!("{}", stylize!("Hello {}": Green i b, world));
 ```
 
-## stylize_many! and println!\_styles!
+## `stylize_many!` and `println!\_styles!`
 
 Stylize many strings individually, and concatenate.
 
@@ -56,7 +56,7 @@ println_styles!(
 );
 ```
 
-## style!
+## `style!`
 
 Creates a `Style` struct, without formatting text.
 
@@ -74,4 +74,19 @@ println!("{}", style.format("Hello"));
 // Default color, italic and bold
 let style = style!(- i b);
 println!("{}", style.format("Hello"));
+```
+
+## No macros
+
+```rust
+use stilo::{Style, Color::*, stylize};
+
+// Create a new style with the builder pattern
+// `Style` implements `Copy`
+let style = Style::new().color(Red).italic();
+
+// OOP Syntax
+println!("{}", style.format("Hello!"));
+// Functional syntax
+println!("{}", stylize("Hello!", style));
 ```
