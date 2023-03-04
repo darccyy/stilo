@@ -37,7 +37,7 @@ macro_rules! println_styles {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn print_styles_works() {
+    fn println_styles_works() {
         let world = "World!";
 
         println_styles!(
